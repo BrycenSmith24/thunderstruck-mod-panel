@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thunderstruck Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #111;
+      border-right: 1px solid #fff;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+
+    .sidebar button {
+      background-color: #000;
+      color: #fff;
+      border: 1px solid #fff;
+      padding: 12px;
+      margin: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .sidebar button:hover {
+      background-color: #fff;
+      color: #000;
+    }
+
+    /* Main content */
+    .content {
+      flex: 1;
+      padding: 40px;
+      background-color: #000;
+    }
+
+    .content h1 {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Thunderstruck Panel</h2>
+    <button onclick="showPage('moderation')">Moderation</button>
+    <button onclick="showPage('settings')">Settings</button>
+  </div>
+
+  <div class="content" id="content">
+    <h1>Welcome, Staff Member</h1>
+    <p>Select an option from the sidebar to begin.</p>
+  </div>
+
+  <script>
+    function showPage(page) {
+      const content = document.getElementById('content');
+      if (page === 'moderation') {
+        content.innerHTML = `
+          <h1>Moderation Panel</h1>
+          <p>Here you’ll be able to ban, kick, and warn players.</p>
+        `;
+      } else if (page === 'settings') {
+        content.innerHTML = `
+          <h1>Settings</h1>
+          <p>Adjust your account and panel preferences here.</p>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
