@@ -4,137 +4,90 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thunderstruck Dashboard</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      height: 100vh;
-    }
+<style>
+  /* Action buttons */
+  .action-buttons {
+    margin: 20px 0;
+    display: flex;
+    gap: 20px;
+  }
 
-    .sidebar {
-      width: 220px;
-      background-color: #111;
-      border-right: 1px solid #fff;
-      display: flex;
-      flex-direction: column;
-      padding-top: 20px;
-    }
+  .action-btn {
+    flex: 1;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+  }
 
-    .sidebar h2 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+  .action-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
 
-    .sidebar button {
-      background-color: #000;
-      color: #fff;
-      border: 1px solid #fff;
-      padding: 12px;
-      margin: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
+  .ban-btn {
+    background-color: #b30000;
+    color: #fff;
+  }
 
-    .sidebar button:hover {
-      background-color: #fff;
-      color: #000;
-    }
+  .kick-btn {
+    background-color: #0066cc;
+    color: #fff;
+  }
 
-    .content {
-      flex: 1;
-      padding: 40px;
-      background-color: #000;
-    }
+  .warn-btn {
+    background-color: #ffcc00;
+    color: #000;
+  }
+</style>
 
-    .form-section {
-      margin-top: 20px;
-      border: 1px solid #fff;
-      padding: 20px;
-      border-radius: 8px;
-      background-color: #111;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #fff;
-      border-radius: 4px;
-      background-color: #000;
-      color: #fff;
-    }
-
-    button.action {
-      background-color: #fff;
-      color: #000;
-      border: none;
-      padding: 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button.action:hover {
-      background-color: #ccc;
-    }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <h2>Thunderstruck Panel</h2>
-    <button onclick="showPage('moderation')">Moderation</button>
-    <button onclick="showPage('settings')">Settings</button>
-  </div>
-
-  <div class="content" id="content">
-    <h1>Welcome, Staff Member</h1>
-    <p>Select an option from the sidebar to begin.</p>
-  </div>
-
-  <script>
-    function showPage(page) {
-      const content = document.getElementById('content');
-      if (page === 'moderation') {
-        content.innerHTML = `
-          <h1>Moderation Panel</h1>
-          <div>
-            <button onclick="showForm('ban')">Ban</button>
-            <button onclick="showForm('kick')">Kick</button>
-            <button onclick="showForm('warn')">Warn</button>
-          </div>
-          <div id="form-area"></div>
-        `;
-      } else if (page === 'settings') {
-        content.innerHTML = '<h1>Settings</h1><p>Adjust your account and panel preferences here.</p>';
-      }
-    }
-
-    function showForm(type) {
-      const formArea = document.getElementById('form-area');
-      let title = type.charAt(0).toUpperCase() + type.slice(1);
-      formArea.innerHTML = `
-        <div class="form-section">
-          <h2>${title} User</h2>
-          <input type="text" id="username" placeholder="Roblox Username" required>
-          <input type="text" id="userid" placeholder="Roblox ID (auto-filled)" readonly>
-          <select id="reason">
-            <option value="">Select Reason</option>
-            <option>Exploiting</option>
-            <option>Toxicity</option>
-            <option>Harassment</option>
-            <option>Other</option>
-          </select>
-          <textarea id="comments" placeholder="Additional comments"></textarea>
-          ${type === 'ban' ? '<input type="text" id="length" placeholder="Ban Length (hours)">':''}
-          <button class="action">${title}</button>
+<script>
+  function showPage(page) {
+    const content = document.getElementById('content');
+    if (page === 'moderation') {
+      content.innerHTML = `
+        <h1>Moderation Panel</h1>
+        <div class="action-buttons">
+          <button class="action-btn ban-btn" onclick="showForm('ban')">Ban</button>
+          <button class="action-btn kick-btn" onclick="showForm('kick')">Kick</button>
+          <button class="action-btn warn-btn" onclick="showForm('warn')">Warn</button>
         </div>
+        <div id="form-area"></div>
       `;
+    } else if (page === 'settings') {
+      content.innerHTML = '<h1>Settings</h1><p>Adjust your account and panel preferences here.</p>';
     }
-  </script>
+  }
+
+  function showForm(type) {
+    const formArea = document.getElementById('form-area');
+    const reasons = [
+      { code: 'EXP', label: 'Exploiting / Cheating' },
+      { code: 'TOX', label: 'Toxic Behavior / Harassment' },
+      { code: 'SPM', label: 'Spamming / Advertising' },
+      { code: 'ABU', label: 'Abuse of Staff / Rules' },
+      { code: 'OTH', label: 'Other (Specify Below)' }
+    ];
+
+    let reasonOptions = reasons.map(r => `<option value="${r.code}">${r.label}</option>`).join('');
+
+    let title = type.charAt(0).toUpperCase() + type.slice(1);
+    formArea.innerHTML = `
+      <div class="form-section">
+        <h2>${title} User</h2>
+        <input type="text" id="username" placeholder="Roblox Username" required>
+        <input type="text" id="userid" placeholder="Roblox ID (auto-filled)" readonly>
+        <select id="reason">${reasonOptions}</select>
+        <textarea id="comments" placeholder="Additional comments"></textarea>
+        ${type === 'ban' ? '<input type="text" id="length" placeholder="Ban Length (hours)">' : ''}
+        <button class="action">${title}</button>
+      </div>
+    `;
+  }
+</script>
+
 </body>
 </html>
