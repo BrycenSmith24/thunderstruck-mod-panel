@@ -1,93 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Thunderstruck Dashboard</title>
-<style>
-  /* Action buttons */
-  .action-buttons {
-    margin: 20px 0;
-    display: flex;
-    gap: 20px;
-  }
-
-  .action-btn {
-    flex: 1;
-    padding: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
-  }
-
-  .action-btn:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
-  }
-
-  .ban-btn {
-    background-color: #b30000;
-    color: #fff;
-  }
-
-  .kick-btn {
-    background-color: #0066cc;
-    color: #fff;
-  }
-
-  .warn-btn {
-    background-color: #ffcc00;
-    color: #000;
-  }
-</style>
-
-<script>
-  function showPage(page) {
-    const content = document.getElementById('content');
-    if (page === 'moderation') {
-      content.innerHTML = `
-        <h1>Moderation Panel</h1>
-        <div class="action-buttons">
-          <button class="action-btn ban-btn" onclick="showForm('ban')">Ban</button>
-          <button class="action-btn kick-btn" onclick="showForm('kick')">Kick</button>
-          <button class="action-btn warn-btn" onclick="showForm('warn')">Warn</button>
-        </div>
-        <div id="form-area"></div>
-      `;
-    } else if (page === 'settings') {
-      content.innerHTML = '<h1>Settings</h1><p>Adjust your account and panel preferences here.</p>';
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#111;
+      --accent:#fff;
+      --muted:#222;
+      --radius:10px;
     }
-  }
 
-  function showForm(type) {
-    const formArea = document.getElementById('form-area');
-    const reasons = [
-      { code: 'EXP', label: 'Exploiting / Cheating' },
-      { code: 'TOX', label: 'Toxic Behavior / Harassment' },
-      { code: 'SPM', label: 'Spamming / Advertising' },
-      { code: 'ABU', label: 'Abuse of Staff / Rules' },
-      { code: 'OTH', label: 'Other (Specify Below)' }
-    ];
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--accent);font-family:Inter,Arial,Helvetica,sans-serif}
+    .app{display:flex;height:100vh;overflow:hidden}
 
-    let reasonOptions = reasons.map(r => `<option value="${r.code}">${r.label}</option>`).join('');
+    /* Sidebar */
+    .sidebar{
+      width:240px;
+      background:var(--panel);
+      border-right:1px solid var(--accent);
+      padding:28px 18px;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .brand{font-weight:800;text-align:center;font-size:18px}
+    .nav-btn{
+      background:transparent;color:var(--accent);border:1px solid var(--accent);
+      padding:12px;border-radius:8px;cursor:pointer;font-weight:700;
+    }
+    .nav-btn:hover{background:var(--accent);color:var(--bg)}
 
-    let title = type.charAt(0).toUpperCase() + type.slice(1);
-    formArea.innerHTML = `
-      <div class="form-section">
-        <h2>${title} User</h2>
-        <input type="text" id="username" placeholder="Roblox Username" required>
-        <input type="text" id="userid" placeholder="Roblox ID (auto-filled)" readonly>
-        <select id="reason">${reasonOptions}</select>
-        <textarea id="comments" placeholder="Additional comments"></textarea>
-        ${type === 'ban' ? '<input type="text" id="length" placeholder="Ban Length (hours)">' : ''}
-        <button class="action">${title}</button>
+    /* Main content */
+    .main{flex:1;padding:28px;box-sizing:border-box;overflow:auto}
+    .header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .welcome{font-size:20px;font-weight:700}
+
+    /* Action buttons row */
+    .action-row{display:flex;gap:18px;margin-top:18px}
+    .action-btn{
+      flex:1;padding:18px;border-radius:12px;border:none;font-size:18px;font-weight:800;cursor:pointer;
+      box-shadow:0 6px 18px rgba(255,255,255,0.03);transition:transform .12s ease,opacity .12s;
+    }
+    .action-btn:active{transform:translateY(1px)}
+    .action-btn:hover{opacity:0.95}
+
+    .ban-btn{background:#b30000;color:#fff}
+    .kick-btn{background:#0066cc;color:#fff}
+    .warn-btn{background:#ffcc00;color:#000}
+
+    /* Form card */
+    .card{margin-top:20px;background:var(--panel);border:1px solid var(--accent);padding:18px;border-radius:var(--radius)}
+    .card h2{margin:0 0 12px 0;font-size:18px}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    label{display:block;font-size:13px;margin-bottom:6px;color:#ddd}
+    input[type="text"], select, textarea{
+      width:100%;padding:10px;border-radius:8px;border:1px solid #fff;background:var(--bg);color:var(--accent);
+      box-sizing:border-box;font-size:14px;
+    }
+    textarea{min-height:90px;resize:vertical}
+    .small{font-size:13px;color:#bbb;margin-top:8px}
+
+    /* Submit */
+    .submit-row{display:flex;gap:12px;margin-top:12px}
+    .submit-btn{
+      padding:12px 18px;border-radius:10px;border:none;font-weight:800;cursor:pointer;
+    }
+    .submit-btn.primary{background:#fff;color:#000}
+    .submit-btn.ghost{background:transparent;border:1px solid #fff;color:#fff}
+
+    /* feedback */
+    .toast{margin-top:12px;padding:10px;border-radius:8px;background:#0b0b0b;border:1px solid #333;color:#fff}
+
+    /* responsive */
+    @media (max-width:800px){
+      .sidebar{display:none}
+      .action-row{flex-direction:column}
+      .row{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Thunderstruck Panel</div>
+      <button class="nav-btn" onclick="showPage('moderation')">Moderation</button>
+      <button class="nav-btn" onclick="showPage('settings')">Settings</button>
+      <div style="flex:1"></div>
+      <div style="font-size:12px;color:#bbb;text-align:center">Logged in as <strong>Staff</strong></div>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <div>
+          <div class="welcome">Welcome, Staff Member</div>
+          <div class="small">Use the moderation tools to manage players safely</div>
+        </div>
+        <div>
+          <button class="nav-btn" onclick="logout()">Logout</button>
+        </div>
       </div>
-    `;
-  }
-</script>
 
+      <div id="page-content">
+        <div class="card">
+          <h2>Get started</h2>
+          <p class="small">Open Moderation to ban, kick, or warn players.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Prefilled reasons with codes for consistent backend logging
+    const REASONS = {
+      EXP: 'Exploiting or cheating',
+      TOX: 'Toxic behavior or harassment',
+      SPM: 'Spamming or advertising',
+      ABU: 'Abuse of staff or rules',
+      SCAM: 'Scamming or phishing',
+      GRIEF: 'Griefing or ruining gameplay',
+      OTH: 'Other'
+    };
+
+    // Utility: debounce
+    function debounce(fn, wait=350){
+      let t;
+      return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); };
+    }
+
+    // Show pages
+    function showPage(page){
+      const container = document.getElementById('page-content');
+      if(page === 'moderation'){
+        container.innerHTML = moderationHtml();
+        // attach listeners
+        attachModerationListeners();
+      } else if(page === 'settings'){
+        container.innerHTML = settingsHtml();
+      }
+    }
+
+    function logout(){
+      // placeholder - implement real logout
+      window.location.href = 'index.html';
+    }
+
+    // Moderation HTML
+    function moderationHtml(){
+      const reasonOptions = Object.entries(REASONS).map(([code,label])=>`<option value="${code}">${label}</option>`).join('');
+      return `
+        <div class="card">
+          <h2>Moderation Panel</h2>
+          <div class="action-row">
+            <button class="action-btn ban-btn" onclick="showForm('ban')">Ban</button>
+            <button class="action-btn kick-btn" onclick="showForm('kick')">Kick</button>
+            <button class="action-btn warn-btn" onclick="showForm('warn')">Warn</button>
+          </div>
+          <div id="form-area"></div>
+        </div>
+      `;
+    }
+
+    // Settings HTML
+    function settingsHtml(){
+      return `
+        <div class="card">
+          <h2>Settings</h2>
+          <p class="small">Panel settings and account management will go here.</p>
+        </div>
+      `;
+    }
+
+    // Show specific form
+    function showForm(type){
+      const formArea = document.getElementById('form-area');
+      const reasonOptions = Object.entries(REASONS).map(([code,label])=>`<option value="${code}">${label}</option>`).join('');
+      const banLengthSelect = `
+        <select id="length">
+          <option value="1">1 hour</option>
+          <option value="6">6 hours</option>
+          <option value="24">24 hours</option>
+          <option value="168">7 days</option>
+          <option value="720">30 days</option>
+          <option value="perm">Permanent</option>
+        </select>
+      `;
+
+      formArea.innerHTML = `
+        <div class="card">
+          <h2>${capitalize(type)} User</h2>
+
+          <div class="row">
+            <div class="col">
+              <label for="username">Roblox Username</label>
+              <input type="text" id="username" placeholder="Type username and wait" autocomplete="off" />
+            </div>
+            <div class="col">
+              <label for="userid">Roblox ID</label>
+              <input type="text" id="userid" placeholder="Auto-filled" readonly />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div class="col">
+              <label for="reason">Reason</label>
+              <select id="reason">${reasonOptions}</select>
+            </div>
+            <div class="col">
+              <label for="extra">Extra (optional)</label>
+              <input type="text" id="extra" placeholder="e.g., exploit name, evidence id" />
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label for="comments">Comments</label>
+            <textarea id="comments" placeholder="Add context for logs and appeals"></textarea>
+          </div>
+
+          ${type === 'ban' ? `<div style="margin-top:12px"><label for="length">Ban Length</label>${banLengthSelect}</div>` : ''}
+
+          <div class="submit-row">
+            <button class="submit-btn primary" id="submit-action">${capitalize(type)}</button>
+            <button class="submit-btn ghost" onclick="clearForm()">Clear</button>
+          </div>
+
+          <div id="feedback" class="small"></div>
+        </div>
+      `;
+
+      // attach username -> id auto-fill with debounce
+      const usernameInput = document.getElementById('username');
+      usernameInput.addEventListener('input', debounce(handleUsernameInput, 400));
+
+      // submit handler
+      document.getElementById('submit-action').addEventListener('click', ()=>submitAction(type));
+    }
+
+    // Capitalize helper
+    function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+    // Clear form
+    function clearForm(){
+      const formArea = document.getElementById('form-area');
+      const inputs = formArea.querySelectorAll('input,textarea,select');
+      inputs.forEach(i=>{ if(i.type !== 'button') i.value=''; });
+      const fb = document.getElementById('feedback'); if(fb) fb.textContent='';
+    }
+
+    // Handle username input: call Roblox API to resolve ID
+    async function handleUsernameInput(e){
+      const name = e.target.value.trim();
+      const idField = document.getElementById('userid');
+      const fb = document.getElementById('feedback');
+      if(!name){ idField.value=''; if(fb) fb.textContent=''; return; }
+
+      idField.value = 'Searching...';
+      if(fb) fb.textContent='';
+
+      try{
+        // Roblox public endpoint to resolve usernames
+        const res = await fetch('https://users.roblox.com/v1/usernames/users', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({usernames:[name], excludeBannedUsers:false})
+        });
+
+        if(!res.ok){
+          idField.value='';
+          if(fb) fb.textContent = 'Could not resolve username';
+          return;
+        }
+
+        const data = await res.json();
+        if(data && data.data && data.data.length){
+          const user = data.data[0];
+          idField.value = user.id || '';
+          if(fb) fb.textContent = `Found: ${user.name} (display: ${user.displayName || '—'})`;
+        } else {
+          idField.value = '';
+          if(fb) fb.textContent = 'No user found';
+        }
+      }catch(err){
+        idField.value = '';
+        if(fb) fb.textContent = 'Lookup failed';
+        console.error('username lookup error', err);
+      }
+    }
+
+    // Submit action to backend
+    async function submitAction(type){
+      const username = document.getElementById('username')?.value?.trim();
+      const userid = document.getElementById('userid')?.value?.trim();
+      const reason = document.getElementById('reason')?.value;
+      const extra = document.getElementById('extra')?.value?.trim();
+      const comments = document.getElementById('comments')?.value?.trim();
+      const length = document.getElementById('length')?.value;
+
+      const fb = document.getElementById('feedback');
+
+      if(!username || !userid){
+        if(fb) fb.textContent = 'Please provide a valid username and ensure ID is filled.';
+        return;
+      }
+
+      // Build payload with coded reason
+      const payload = {
+        action: type, // ban | kick | warn
+        username,
+        userid,
+        reasonCode: reason,
+        reasonText: REASONS[reason] || 'Other',
+        extra,
+        comments,
+        length // may be undefined for kick/warn
+      };
+
+      if(fb) fb.textContent = 'Sending...';
+
+      try{
+        // Replace /api/moderation with your secure server endpoint
+        const res = await fetch('/api/moderation', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload)
+        });
+
+        if(res.ok){
+          const result = await res.json().catch(()=>({ok:true}));
+          if(fb) fb.textContent = 'Action submitted successfully.';
+          // Optionally clear form or show audit id
+        } else {
+          const errText = await res.text().catch(()=>res.statusText);
+          if(fb) fb.textContent = 'Server error: ' + errText;
+        }
+      }catch(err){
+        console.error('submit error', err);
+        if(fb) fb.textContent = 'Network error while sending action.';
+      }
+    }
+
+    // Initialize default page
+    showPage('moderation');
+  </script>
 </body>
 </html>
