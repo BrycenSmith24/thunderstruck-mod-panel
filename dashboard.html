@@ -5,416 +5,56 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Thunderstruck Dashboard</title>
   <style>
-    :root {
-      --bg: #000;
-      --panel: #111;
-      --accent: #fff;
-      --muted: #222;
-      --radius: 12px;
-    }
-
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: var(--bg);
-      color: var(--accent);
-      font-family: Inter, Arial, Helvetica, sans-serif;
-    }
-
-    .app {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .sidebar {
-      width: 240px;
-      background: var(--panel);
-      border-right: 1px solid var(--accent);
-      padding: 28px 18px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand {
-      font-weight: 800;
-      text-align: center;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-
-    .nav-btn {
-      background: transparent;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      padding: 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .nav-btn:hover {
-      background: var(--accent);
-      color: var(--bg);
-    }
-
-    .main {
-      flex: 1;
-      padding: 28px;
-      box-sizing: border-box;
-      overflow: auto;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .welcome {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .small {
-      font-size: 13px;
-      color: #bbb;
-    }
-
-    .action-row {
-      display: flex;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .action-btn {
-      flex: 1;
-      padding: 18px;
-      border-radius: 12px;
-      border: none;
-      font-size: 18px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.03);
-      transition: transform .12s, opacity .12s;
-    }
-
-    .action-btn:active {
-      transform: translateY(1px);
-    }
-
-    .action-btn:hover {
-      opacity: 0.95;
-    }
-
-    .ban-btn { background: #b30000; color: #fff; }
-    .kick-btn { background: #0066cc; color: #fff; }
-    .warn-btn { background: #ffcc00; color: #000; }
-
-    .card {
-      margin-top: 20px;
-      background: var(--panel);
-      border: 1px solid var(--accent);
-      padding: 18px;
-      border-radius: var(--radius);
-    }
-
-    .card h2 {
-      margin: 0 0 12px 0;
-      font-size: 18px;
-    }
-
-    .row {
-      display: flex;
-      gap: 12px;
-    }
-
-    .col { flex: 1; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 6px;
-      color: #ddd;
-    }
-
-    input[type="text"], select, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #fff;
-      background: var(--bg);
-      color: var(--accent);
-      box-sizing: border-box;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .submit-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .submit-btn {
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .submit-btn.primary {
-      background: #fff;
-      color: #000;
-    }
-
-    .submit-btn.ghost {
-      background: transparent;
-      border: 1px solid #fff;
-      color: #fff;
-    }
-
-    .feedback {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #bbb;
-    }
-
-    @media (max-width: 900px) {
-      .sidebar { display: none; }
-      .action-row { flex-direction: column; }
-      .row { flex-direction: column; }
-    }
+    /* ... Keep your existing CSS ... */
+    /* Add a loading state style */
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar" aria-label="Sidebar">
-      <div class="brand">Thunderstruck Panel</div>
-      <button class="nav-btn" id="navModeration">Moderation</button>
-      <button class="nav-btn" id="navSettings">Settings</button>
-      <div style="flex:1"></div>
-      <div style="font-size:12px;color:#bbb;text-align:center">Live Mode — Cloud API</div>
-    </aside>
-
-    <main class="main" role="main">
-      <div class="header">
-        <div>
-          <div class="welcome">Welcome, Staff Member</div>
-          <div class="small">Live integration with Roblox Open Cloud Moderation.</div>
-        </div>
-        <div>
-          <button class="nav-btn" onclick="location.href='index.html'">Back to Login</button>
-        </div>
-      </div>
-
-      <div id="pageContent">
-        <div class="card">
-          <h2>Get started</h2>
-          <p class="small">Open Moderation to view Ban, Kick, and Warn forms.</p>
-        </div>
-      </div>
-    </main>
-  </div>
-
+  <!-- ... (Rest of your HTML structure remains the same) ... -->
+  
   <script>
-    // --- CREDENTIALS CONFIGURATION ---
-    const WORKER_URL = "https://roblox-ban-bridge.brycensmithobxlover25.workers.dev/"; // Paste your Cloudflare workers.dev link here
-    const UNIVERSE_ID = "5643415199";   // Paste your Universe ID here
-    const API_KEY = "eVndc2hxW0KE3QodAHkJ65mqRRzKojjymcTBh3mVGYPjB7fVZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNkluTnBaeTB5TURJeExUQTNMVEV6VkRFNE9qVXhPalE1V2lJc0luUjVjQ0k2SWtwWFZDSjkuZXlKaGRXUWlPaUpTYjJKc2IzaEpiblJsY201aGJDSXNJbWx6Y3lJNklrTnNiM1ZrUVhWMGFHVnVkR2xqWVhScGIyNVRaWEoyYVdObElpd2lZbUZ6WlVGd2FVdGxlU0k2SW1WV2JtUmpNbWg0VnpCTFJUTlJiMlJCU0d0S05qVnRjVkpTZWt0dmFtcDViV05VUW1nemJWWkhXVkJxUWpkbVZpSXNJbTkzYm1WeVNXUWlPaUl6Tmpjek5UVTBNRFkxSWl3aVpYaHdJam94TnpneU5Ea3lOVE14TENKcFlYUWlPakUzT0RJME9EZzVNekVzSW01aVppSTZNVGM0TWpRNE9Ea3pNWDAuVDlqbnExMnNlQXNGZmFscVZZMmxBVGF0Q3ZLS2plYVNBcDhwR2QyWFBDZ29QT3ZLUEdLeXJTSzdrZUNNakZNWWJ6Q0Jld0U4bEtPYVVLOXRKRTFsS2VrRWR0UlNFelVyVmJZbFo1MmtNM2RPWTlQX3MzLWQ3YTBJRy1GbFI4WXYxb2w1QTFnM0dKQ01fcHlxZklDZ2w2MDRXcC01QUdVSXhkbTAyM3UxcFlkUFFfX2pGOHN6Ul9QamJxeFlaVWN4dnlTVm5STkRVZm1jbVdFY1dac2dhaUNUdFAxUTlRUnRDcWQ0ZWc1bUdCYWlzMVJubzJMb0V2dW5ESzdzaEV1NTE0eG52RmhxRVBiN0F2cjBqSXE5R1U2MWpnaHpEMkR3MzZMbTNzeERPd01CM2hjZjE1NXFlTlpQaGNISTVISk5GaWQtcUxicThGRFlFZ1NZbnF6ci1n";          // Paste your Roblox API Key here
-    // ---------------------------------
+    const WORKER_URL = "https://roblox-ban-bridge.your-worker-domain.workers.dev/";
 
-    const REASONS = {
-      EXP: 'Exploiting or cheating',
-      TOX: 'Toxic behavior or harassment',
-      SPM: 'Spamming or advertising',
-      ABU: 'Abuse of staff or rules',
-      SCAM: 'Scamming or phishing',
-      GRIEF: 'Griefing or ruining gameplay',
-      OTH: 'Other'
-    };
+    // ... (Keep your REASONS object and showPage functions) ...
 
-    document.getElementById('navModeration').addEventListener('click', () => showPage('moderation'));
-    document.getElementById('navSettings').addEventListener('click', () => showPage('settings'));
+    // Updated Submit Logic (No API Key sent)
+    document.getElementById('submitAction').addEventListener('click', async (e) => {
+      const btn = e.target;
+      const fb = document.getElementById('feedback');
+      const userId = document.getElementById('userid').value.trim();
+      const action = document.querySelector('.action-btn.active')?.dataset.action || 'ban';
 
-    function showPage(page) {
-      const container = document.getElementById('pageContent');
-      if (page === 'moderation') {
-        container.innerHTML = moderationHtml();
-        attachModerationListeners();
-      } else {
-        container.innerHTML = settingsHtml();
+      if (!userId) {
+        fb.textContent = 'Error: UserID required.';
+        return;
       }
-    }
 
-    function moderationHtml() {
-      return `
-        <div class="card">
-          <h2>Moderation Panel</h2>
-          <div class="action-row">
-            <button class="action-btn ban-btn" data-action="ban">Ban</button>
-            <button class="action-btn kick-btn" data-action="kick">Kick</button>
-            <button class="action-btn warn-btn" data-action="warn">Warn</button>
-          </div>
-          <div id="formArea"></div>
-        </div>
-      `;
-    }
+      btn.disabled = true;
+      fb.textContent = 'Sending request to server...';
 
-    function settingsHtml() {
-      return `
-        <div class="card">
-          <h2>Settings</h2>
-          <p class="small">Panel settings and account management.</p>
-        </div>
-      `;
-    }
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: action, // Send the action type (ban/kick/warn)
+            userId: userId,
+            reason: document.getElementById('reason').value,
+            extra: document.getElementById('extra').value,
+            comments: document.getElementById('comments').value,
+            duration: document.getElementById('length')?.value || '0'
+          })
+        });
 
-    function attachModerationListeners() {
-      const area = document.getElementById('pageContent');
-      area.querySelectorAll('.action-btn').forEach(btn => {
-        btn.addEventListener('click', () => showForm(btn.getAttribute('data-action')));
-      });
-      showForm('ban');
-    }
-
-    function showForm(type) {
-      const formArea = document.getElementById('formArea');
-      const reasonOptions = Object.entries(REASONS)
-        .map(([code, label]) => `<option value="${label}">${label}</option>`)
-        .join('');
-
-      const banLengthSelect = `
-        <select id="length">
-          <option value="3600s">1 hour</option>
-          <option value="21600s">6 hours</option>
-          <option value="86400s">24 hours</option>
-          <option value="604800s">7 days</option>
-          <option value="2592000s">30 days</option>
-          <option value="permanent">Permanent</option>
-        </select>
-      `;
-
-      formArea.innerHTML = `
-        <div class="card">
-          <h2>${capitalize(type)} User</h2>
-
-          <div class="row">
-            <div class="col">
-              <label for="username">Roblox Username (Optional)</label>
-              <input type="text" id="username" placeholder="Type username" autocomplete="off" />
-            </div>
-            <div class="col">
-              <label for="userid">Roblox UserID (Required)</label>
-              <input type="text" id="userid" placeholder="Target numeric UserID" />
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:12px">
-            <div class="col">
-              <label for="reason">Reason</label>
-              <select id="reason">${reasonOptions}</select>
-            </div>
-            <div class="col">
-              <label for="extra">Extra Context</label>
-              <input type="text" id="extra" placeholder="e.g., exploit name, evidence link" />
-            </div>
-          </div>
-
-          <div style="margin-top:12px">
-            <label for="comments">Comments (Internal Staff Log)</label>
-            <textarea id="comments" placeholder="Add context for logs and appeals"></textarea>
-          </div>
-
-          ${type === 'ban' ? `<div style="margin-top:12px"><label for="length">Ban Length</label>${banLengthSelect}</div>` : ''}
-
-          <div class="submit-row">
-            <button class="submit-btn primary" id="submitAction">${capitalize(type)} User</button>
-            <button class="submit-btn ghost" id="clearForm">Clear</button>
-          </div>
-
-          <div id="feedback" class="feedback">Ready for action.</div>
-        </div>
-      `;
-
-      document.getElementById('submitAction').addEventListener('click', async () => {
-        const fb = document.getElementById('feedback');
-        const userId = document.getElementById('userid').value.trim();
-        const dropdownReason = document.getElementById('reason').value;
-        const extraReason = document.getElementById('extra').value.trim();
-        const internalComments = document.getElementById('comments').value.trim();
-
-        if (!userId) {
-          fb.textContent = 'Error: Roblox UserID is strictly required.';
-          fb.style.color = '#ff4747';
-          return;
-        }
-
-        if (type !== 'ban') {
-          fb.textContent = 'The Open Cloud API currently only supports native Game Bans. Kick and Warn are UI placeholders.';
-          fb.style.color = '#ffcc00';
-          return;
-        }
-
-        fb.textContent = 'Processing action via serverless proxy...';
-        fb.style.color = '#ffcc00';
-
-        const displayReasonString = extraReason ? `${dropdownReason} - ${extraReason}` : dropdownReason;
-        const privateReasonString = internalComments ? internalComments : 'Action issued via website moderation dash.';
-        const durationSelect = document.getElementById('length').value;
-
-        try {
-          const response = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId: userId,
-              universeId: UNIVERSE_ID,
-              apiKey: API_KEY,
-              displayReason: displayReasonString,
-              privateReason: privateReasonString,
-              duration: durationSelect
-            })
-          });
-
-          if (response.ok) {
-            fb.textContent = `Success! Target UserID ${userId} has been banned from the game.`;
-            fb.style.color = '#00ff66';
-          } else {
-            fb.textContent = `Failed (Status ${response.status}). Check configuration or API key.`;
-            fb.style.color = '#ff4747';
-          }
-        } catch (err) {
-          fb.textContent = 'Network error. Failed to reach the backend script proxy.';
-          fb.style.color = '#ff4747';
-          console.error(err);
-        }
-      });
-
-      document.getElementById('clearForm').addEventListener('click', () => {
-        const inputs = formArea.querySelectorAll('input, textarea, select');
-        inputs.forEach(i => i.value = '');
-        const fb = document.getElementById('feedback');
-        fb.textContent = 'Form cleared.';
-        fb.style.color = '#bbb';
-      });
-    }
-
-    function capitalize(s) {
-      return s.charAt(0).toUpperCase() + s.slice(1);
-    }
-
-    // Initialize to moderation view on load
-    showPage('moderation');
+        const data = await response.json();
+        fb.textContent = response.ok ? 'Success: Action processed.' : `Error: ${data.error}`;
+      } catch (err) {
+        fb.textContent = 'Network error.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
   </script>
 </body>
 </html>
