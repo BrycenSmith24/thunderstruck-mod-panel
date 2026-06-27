@@ -1,4 +1,3 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,60 +5,194 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Thunderstruck Dashboard</title>
   <style>
-    :root{
-      --bg:#000;
-      --panel:#111;
-      --accent:#fff;
-      --muted:#222;
-      --radius:12px;
+    :root {
+      --bg: #000;
+      --panel: #111;
+      --accent: #fff;
+      --muted: #222;
+      --radius: 12px;
     }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--accent);font-family:Inter,Arial,Helvetica,sans-serif}
-    .app{display:flex;height:100vh;overflow:hidden}
 
-    /* Sidebar */
-    .sidebar{
-      width:240px;background:var(--panel);border-right:1px solid var(--accent);padding:28px 18px;box-sizing:border-box;display:flex;flex-direction:column;
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--accent);
+      font-family: Inter, Arial, Helvetica, sans-serif;
     }
-    .brand{font-weight:800;text-align:center;font-size:18px;margin-bottom:12px}
-    .nav-btn{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:12px;border-radius:8px;cursor:pointer;font-weight:700;margin-bottom:10px}
-    .nav-btn:hover{background:var(--accent);color:var(--bg)}
 
-    /* Main */
-    .main{flex:1;padding:28px;box-sizing:border-box;overflow:auto}
-    .header{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .welcome{font-size:20px;font-weight:700}
-    .small{font-size:13px;color:#bbb}
-
-    /* Actions */
-    .action-row{display:flex;gap:18px;margin-top:18px}
-    .action-btn{flex:1;padding:18px;border-radius:12px;border:none;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(255,255,255,0.03);transition:transform .12s,opacity .12s}
-    .action-btn:active{transform:translateY(1px)}
-    .action-btn:hover{opacity:0.95}
-    .ban-btn{background:#b30000;color:#fff}
-    .kick-btn{background:#0066cc;color:#fff}
-    .warn-btn{background:#ffcc00;color:#000}
-
-    /* Card / form */
-    .card{margin-top:20px;background:var(--panel);border:1px solid var(--accent);padding:18px;border-radius:var(--radius)}
-    .card h2{margin:0 0 12px 0;font-size:18px}
-    .row{display:flex;gap:12px}
-    .col{flex:1}
-    label{display:block;font-size:13px;margin-bottom:6px;color:#ddd}
-    input[type="text"], select, textarea{
-      width:100%;padding:10px;border-radius:8px;border:1px solid #fff;background:var(--bg);color:var(--accent);box-sizing:border-box;font-size:14px;margin-bottom:10px
+    .app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
     }
-    textarea{min-height:90px;resize:vertical}
-    .submit-row{display:flex;gap:12px;margin-top:12px}
-    .submit-btn{padding:12px 18px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
-    .submit-btn.primary{background:#fff;color:#000}
-    .submit-btn.ghost{background:transparent;border:1px solid #fff;color:#fff}
-    .feedback{margin-top:12px;font-size:13px;color:#bbb}
 
-    /* Responsive */
-    @media (max-width:900px){
-      .sidebar{display:none}
-      .action-row{flex-direction:column}
-      .row{flex-direction:column}
+    .sidebar {
+      width: 240px;
+      background: var(--panel);
+      border-right: 1px solid var(--accent);
+      padding: 28px 18px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      font-weight: 800;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .main {
+      flex: 1;
+      padding: 28px;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .welcome {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #bbb;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 18px;
+      border-radius: 12px;
+      border: none;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.03);
+      transition: transform .12s, opacity .12s;
+    }
+
+    .action-btn:active {
+      transform: translateY(1px);
+    }
+
+    .action-btn:hover {
+      opacity: 0.95;
+    }
+
+    .ban-btn { background: #b30000; color: #fff; }
+    .kick-btn { background: #0066cc; color: #fff; }
+    .warn-btn { background: #ffcc00; color: #000; }
+
+    .card {
+      margin-top: 20px;
+      background: var(--panel);
+      border: 1px solid var(--accent);
+      padding: 18px;
+      border-radius: var(--radius);
+    }
+
+    .card h2 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .col { flex: 1; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #ddd;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #fff;
+      background: var(--bg);
+      color: var(--accent);
+      box-sizing: border-box;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .submit-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .submit-btn {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .submit-btn.primary {
+      background: #fff;
+      color: #000;
+    }
+
+    .submit-btn.ghost {
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+    }
+
+    .feedback {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #bbb;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .action-row { flex-direction: column; }
+      .row { flex-direction: column; }
     }
   </style>
 </head>
@@ -70,14 +203,14 @@
       <button class="nav-btn" id="navModeration">Moderation</button>
       <button class="nav-btn" id="navSettings">Settings</button>
       <div style="flex:1"></div>
-      <div style="font-size:12px;color:#bbb;text-align:center">Demo Mode — static UI</div>
+      <div style="font-size:12px;color:#bbb;text-align:center">Live Mode — Cloud API</div>
     </aside>
 
     <main class="main" role="main">
       <div class="header">
         <div>
           <div class="welcome">Welcome, Staff Member</div>
-          <div class="small">This is a static preview of the moderation UI.</div>
+          <div class="small">Live integration with Roblox Open Cloud Moderation.</div>
         </div>
         <div>
           <button class="nav-btn" onclick="location.href='index.html'">Back to Login</button>
@@ -87,14 +220,19 @@
       <div id="pageContent">
         <div class="card">
           <h2>Get started</h2>
-          <p class="small">Open Moderation to view Ban, Kick, and Warn forms. This is a static HTML preview — actions are not sent anywhere.</p>
+          <p class="small">Open Moderation to view Ban, Kick, and Warn forms.</p>
         </div>
       </div>
     </main>
   </div>
 
   <script>
-    // Static UI only. No network calls.
+    // --- CREDENTIALS CONFIGURATION ---
+    const WORKER_URL = "YOUR_CLOUDFLARE_WORKER_URL"; // Paste your Cloudflare workers.dev link here
+    const UNIVERSE_ID = "YOUR_ROBLOX_UNIVERSE_ID";   // Paste your Universe ID here
+    const API_KEY = "YOUR_ROBLOX_API_KEY";          // Paste your Roblox API Key here
+    // ---------------------------------
+
     const REASONS = {
       EXP: 'Exploiting or cheating',
       TOX: 'Toxic behavior or harassment',
@@ -105,12 +243,12 @@
       OTH: 'Other'
     };
 
-    document.getElementById('navModeration').addEventListener('click', ()=> showPage('moderation'));
-    document.getElementById('navSettings').addEventListener('click', ()=> showPage('settings'));
+    document.getElementById('navModeration').addEventListener('click', () => showPage('moderation'));
+    document.getElementById('navSettings').addEventListener('click', () => showPage('settings'));
 
-    function showPage(page){
+    function showPage(page) {
       const container = document.getElementById('pageContent');
-      if(page === 'moderation'){
+      if (page === 'moderation') {
         container.innerHTML = moderationHtml();
         attachModerationListeners();
       } else {
@@ -118,7 +256,7 @@
       }
     }
 
-    function moderationHtml(){
+    function moderationHtml() {
       return `
         <div class="card">
           <h2>Moderation Panel</h2>
@@ -132,35 +270,37 @@
       `;
     }
 
-    function settingsHtml(){
+    function settingsHtml() {
       return `
         <div class="card">
           <h2>Settings</h2>
-          <p class="small">Panel settings and account management (static preview).</p>
+          <p class="small">Panel settings and account management.</p>
         </div>
       `;
     }
 
-    function attachModerationListeners(){
+    function attachModerationListeners() {
       const area = document.getElementById('pageContent');
-      area.querySelectorAll('.action-btn').forEach(btn=>{
-        btn.addEventListener('click', ()=> showForm(btn.getAttribute('data-action')));
+      area.querySelectorAll('.action-btn').forEach(btn => {
+        btn.addEventListener('click', () => showForm(btn.getAttribute('data-action')));
       });
-      // show default form
       showForm('ban');
     }
 
-    function showForm(type){
+    function showForm(type) {
       const formArea = document.getElementById('formArea');
-      const reasonOptions = Object.entries(REASONS).map(([code,label])=>`<option value="${code}">${label}</option>`).join('');
+      const reasonOptions = Object.entries(REASONS)
+        .map(([code, label]) => `<option value="${label}">${label}</option>`)
+        .join('');
+
       const banLengthSelect = `
         <select id="length">
-          <option value="1">1 hour</option>
-          <option value="6">6 hours</option>
-          <option value="24">24 hours</option>
-          <option value="168">7 days</option>
-          <option value="720">30 days</option>
-          <option value="perm">Permanent</option>
+          <option value="3600s">1 hour</option>
+          <option value="21600s">6 hours</option>
+          <option value="86400s">24 hours</option>
+          <option value="604800s">7 days</option>
+          <option value="2592000s">30 days</option>
+          <option value="permanent">Permanent</option>
         </select>
       `;
 
@@ -170,12 +310,12 @@
 
           <div class="row">
             <div class="col">
-              <label for="username">Roblox Username</label>
-              <input type="text" id="username" placeholder="Type username (auto-fill disabled in static preview)" autocomplete="off" />
+              <label for="username">Roblox Username (Optional)</label>
+              <input type="text" id="username" placeholder="Type username" autocomplete="off" />
             </div>
             <div class="col">
-              <label for="userid">Roblox ID</label>
-              <input type="text" id="userid" placeholder="Auto-fill disabled" readonly />
+              <label for="userid">Roblox UserID (Required)</label>
+              <input type="text" id="userid" placeholder="Target numeric UserID" />
             </div>
           </div>
 
@@ -185,43 +325,93 @@
               <select id="reason">${reasonOptions}</select>
             </div>
             <div class="col">
-              <label for="extra">Extra (optional)</label>
-              <input type="text" id="extra" placeholder="e.g., exploit name, evidence id" />
+              <label for="extra">Extra Context</label>
+              <input type="text" id="extra" placeholder="e.g., exploit name, evidence link" />
             </div>
           </div>
 
           <div style="margin-top:12px">
-            <label for="comments">Comments</label>
+            <label for="comments">Comments (Internal Staff Log)</label>
             <textarea id="comments" placeholder="Add context for logs and appeals"></textarea>
           </div>
 
           ${type === 'ban' ? `<div style="margin-top:12px"><label for="length">Ban Length</label>${banLengthSelect}</div>` : ''}
 
           <div class="submit-row">
-            <button class="submit-btn primary" id="submitAction">${capitalize(type)}</button>
+            <button class="submit-btn primary" id="submitAction">${capitalize(type)} User</button>
             <button class="submit-btn ghost" id="clearForm">Clear</button>
           </div>
 
-          <div id="feedback" class="feedback">Static preview — actions are not sent.</div>
+          <div id="feedback" class="feedback">Ready for action.</div>
         </div>
       `;
 
-      document.getElementById('submitAction').addEventListener('click', ()=> {
+      document.getElementById('submitAction').addEventListener('click', async () => {
         const fb = document.getElementById('feedback');
-        fb.textContent = `Demo: ${capitalize(type)} action simulated (no network).`;
+        const userId = document.getElementById('userid').value.trim();
+        const dropdownReason = document.getElementById('reason').value;
+        const extraReason = document.getElementById('extra').value.trim();
+        const internalComments = document.getElementById('comments').value.trim();
+
+        if (!userId) {
+          fb.textContent = 'Error: Roblox UserID is strictly required.';
+          fb.style.color = '#ff4747';
+          return;
+        }
+
+        if (type !== 'ban') {
+          fb.textContent = 'The Open Cloud API currently only supports native Game Bans. Kick and Warn are UI placeholders.';
+          fb.style.color = '#ffcc00';
+          return;
+        }
+
+        fb.textContent = 'Processing action via serverless proxy...';
         fb.style.color = '#ffcc00';
+
+        const displayReasonString = extraReason ? `${dropdownReason} - ${extraReason}` : dropdownReason;
+        const privateReasonString = internalComments ? internalComments : 'Action issued via website moderation dash.';
+        const durationSelect = document.getElementById('length').value;
+
+        try {
+          const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: userId,
+              universeId: UNIVERSE_ID,
+              apiKey: API_KEY,
+              displayReason: displayReasonString,
+              privateReason: privateReasonString,
+              duration: durationSelect
+            })
+          });
+
+          if (response.ok) {
+            fb.textContent = `Success! Target UserID ${userId} has been banned from the game.`;
+            fb.style.color = '#00ff66';
+          } else {
+            fb.textContent = `Failed (Status ${response.status}). Check configuration or API key.`;
+            fb.style.color = '#ff4747';
+          }
+        } catch (err) {
+          fb.textContent = 'Network error. Failed to reach the backend script proxy.';
+          fb.style.color = '#ff4747';
+          console.error(err);
+        }
       });
 
-      document.getElementById('clearForm').addEventListener('click', ()=> {
-        const inputs = formArea.querySelectorAll('input,textarea,select');
-        inputs.forEach(i=> i.value = '');
+      document.getElementById('clearForm').addEventListener('click', () => {
+        const inputs = formArea.querySelectorAll('input, textarea, select');
+        inputs.forEach(i => i.value = '');
         const fb = document.getElementById('feedback');
         fb.textContent = 'Form cleared.';
         fb.style.color = '#bbb';
       });
     }
 
-    function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
 
     // Initialize to moderation view on load
     showPage('moderation');
