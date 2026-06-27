@@ -1,63 +1,57 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Staff Login | Thunderstruck</title>
-  <style>
-    :root{
-      --bg:#000;
-      --panel:#111;
-      --accent:#fff;
-      --muted:#222;
-      --radius:10px;
-    }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--accent);font-family:Inter,Arial,Helvetica,sans-serif}
-    .wrap{display:flex;align-items:center;justify-content:center;height:100vh;padding:20px;box-sizing:border-box}
-    .card{width:360px;background:var(--panel);border:1px solid var(--accent);padding:28px;border-radius:12px;box-shadow:0 8px 30px rgba(255,255,255,0.03)}
-    h1{margin:0 0 8px 0;font-size:20px;text-align:center}
-    p.lead{margin:0 0 18px 0;color:#bbb;text-align:center;font-size:13px}
-    label{display:block;font-size:13px;margin-bottom:6px;color:#ddd}
-    input{width:100%;padding:10px;border-radius:8px;border:1px solid #fff;background:var(--bg);color:var(--accent);box-sizing:border-box;margin-bottom:12px}
-    button{width:100%;padding:12px;border-radius:8px;border:none;background:var(--accent);color:var(--bg);font-weight:800;cursor:pointer}
-    .note{margin-top:12px;font-size:13px;color:#bbb;text-align:center}
-    a.link{color:#fff;text-decoration:underline}
-    .small{font-size:12px;color:#999;margin-top:8px;text-align:center}
-  </style>
-</head>
+  </head>
 <body>
   <div class="wrap">
-    <div class="card" role="main" aria-labelledby="title">
-      <h1 id="title">Staff Login</h1>
-      <p class="lead">Black &amp; white demo — static HTML only</p>
-
-      <form id="loginForm" onsubmit="event.preventDefault(); demoNotice()">
+    <div class="card">
+      <h1>Staff Login</h1>
+      <form id="loginForm">
         <label for="username">Username</label>
-        <input id="username" name="username" type="text" autocomplete="username" placeholder="Enter username" required>
-
+        <input id="username" type="text" required>
         <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required>
-
-        <button type="submit">Login</button>
+        <input id="password" type="password" required>
+        <button type="submit" id="submitBtn">Login</button>
       </form>
-
-      <div class="note" id="demoNote" style="display:none;color:#ffcc00">
-        Demo only — no authentication. Use the Dashboard link below to view the UI.
-      </div>
-
-      <div class="small">
-        <a class="link" href="dashboard.html">Open Dashboard (static)</a>
-      </div>
+      <div id="msg" style="margin-top:12px; text-align:center;"></div>
     </div>
   </div>
 
   <script>
-    function demoNotice(){
-      const n = document.getElementById('demoNote');
-      n.style.display = 'block';
-      setTimeout(()=> n.style.display = 'none', 4000);
-    }
+    const WORKER_URL = "https://roblox-ban-bridge.your-worker-domain.workers.dev/";
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const msg = document.getElementById('msg');
+      
+      btn.disabled = true;
+      msg.textContent = "Authenticating...";
+
+      try {
+        const response = await fetch(`${WORKER_URL}/auth`, {
+          method: 'POST',
+          body: JSON.stringify({
+            user: document.getElementById('username').value,
+            pass: document.getElementById('password').value
+          })
+        });
+
+        if (response.ok) {
+          window.location.href = "dashboard.html";
+        } else {
+          msg.style.color = "#ff4747";
+          msg.textContent = "Invalid credentials.";
+        }
+      } catch (err) {
+        msg.textContent = "Connection error.";
+      } finally {
+        btn.disabled = false;
+      }
+    });
   </script>
 </body>
 </html>
