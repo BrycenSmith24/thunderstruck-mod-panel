@@ -4,36 +4,158 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Staff Login | Thunderstruck</title>
-  </head>
+  <style>
+    :root {
+      --bg: #000;
+      --panel: #0a0a0a;
+      --accent: #fff;
+      --muted: #222;
+      --border: #333;
+      --error: #ff4747;
+      --radius: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--accent);
+      font-family: 'Inter', Arial, Helvetica, sans-serif;
+    }
+
+    .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: 0 12px 40px rgba(255, 255, 255, 0.01);
+    }
+
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+
+    p.lead {
+      margin: 0 0 24px 0;
+      color: #888;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      color: #aaa;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #111;
+      color: var(--accent);
+      box-sizing: border-box;
+      margin-bottom: 18px;
+      font-size: 15px;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:active {
+      transform: scale(0.99);
+    }
+
+    button:disabled {
+      background: var(--muted);
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      margin-top: 16px;
+      font-size: 13px;
+      text-align: center;
+      min-height: 20px;
+    }
+  </style>
+</head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <h1>Staff Login</h1>
+    <div class="card" role="main">
+      <h1>Thunderstruck</h1>
+      <p class="lead">Staff Administration Portal</p>
+
       <form id="loginForm">
         <label for="username">Username</label>
-        <input id="username" type="text" required>
+        <input id="username" name="username" type="text" autocomplete="username" placeholder="Staff Username" required>
+
         <label for="password">Password</label>
-        <input id="password" type="password" required>
-        <button type="submit" id="submitBtn">Login</button>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+
+        <button type="submit" id="loginBtn">Authenticate</button>
       </form>
-      <div id="msg" style="margin-top:12px; text-align:center;"></div>
+
+      <div class="feedback" id="feedback"></div>
     </div>
   </div>
 
   <script>
-    const WORKER_URL = "https://roblox-ban-bridge.your-worker-domain.workers.dev/";
+    const WORKER_URL = "https://roblox-ban-bridge.brycensmithobxlover25.workers.dev";
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      const msg = document.getElementById('msg');
+      const btn = document.getElementById('loginBtn');
+      const fb = document.getElementById('feedback');
       
       btn.disabled = true;
-      msg.textContent = "Authenticating...";
+      fb.textContent = "Verifying credentials...";
+      fb.style.color = "#aaa";
 
       try {
         const response = await fetch(`${WORKER_URL}/auth`, {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user: document.getElementById('username').value,
             pass: document.getElementById('password').value
@@ -41,14 +163,20 @@
         });
 
         if (response.ok) {
-          window.location.href = "dashboard.html";
+          fb.textContent = "Authorized! Redirecting...";
+          fb.style.color = "#00ff66";
+          // Store an ephemeral session token if your worker generates one, otherwise redirect
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
         } else {
-          msg.style.color = "#ff4747";
-          msg.textContent = "Invalid credentials.";
+          fb.textContent = "Invalid username or password.";
+          fb.style.color = "var(--error)";
+          btn.disabled = false;
         }
       } catch (err) {
-        msg.textContent = "Connection error.";
-      } finally {
+        fb.textContent = "Network error. Could not connect to authentication bridge.";
+        fb.style.color = "var(--error)";
         btn.disabled = false;
       }
     });
